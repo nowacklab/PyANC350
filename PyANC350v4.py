@@ -36,12 +36,12 @@ from . import ANC350v4lib as ANC
 import ctypes, math
 
 class Positioner:
-    
+
     def __init__(self):
         self.discover()
         self.device = self.connect()
-        
-        
+
+
     def configureAQuadBIn(self, axisNo, enable, resolution):
         '''
         Enables and configures the A-Quad-B (quadrature) input for the target position.
@@ -53,8 +53,8 @@ class Positioner:
             None
         '''
         ANC.configureAQuadBIn(self.device, axisNo, enable, ctypes.c_double(resolution))
-        
-        
+
+
     def configureAQuadBOut(self, axisNo, enable, resolution, clock):
         '''
         Enables and configures the A-Quad-B output of the current position.
@@ -68,8 +68,8 @@ class Positioner:
             None
         '''
         ANC.configureAQuadBOut(self.device, axisNo, enable, ctypes.c_double(resolution), ctypes.c_double(clock))
-       
-    
+
+
     def configureExtTrigger(self, axisNo, mode):
         '''
         Enables the input trigger for steps.
@@ -81,8 +81,8 @@ class Positioner:
             None
         '''
         ANC.configureExtTrigger(self.device, axisNo, mode)
-     
-    
+
+
     def configureNslTrigger(self, enable):
         '''
         Enables NSL Input as Trigger Source.
@@ -93,8 +93,8 @@ class Positioner:
             None
         '''
         ANC.configureNslTrigger(self.device, enable)
-    
-    
+
+
     def configureNslTriggerAxis(self, axisNo):
         '''
         Selects Axis for NSL Trigger.
@@ -105,8 +105,8 @@ class Positioner:
             None
         '''
         ANC.configureNslTriggerAxis(self.device, axisNo)
-      
-    
+
+
     def configureRngTrigger(self, axisNo, lower, upper):
         '''
         Configure lower position for range Trigger.
@@ -119,8 +119,8 @@ class Positioner:
             None
         '''
         ANC.configureRngTrigger(self.device, axisNo, lower, upper)
-       
-    
+
+
     def configureRngTriggerEps(self, axisNo, epsilon):
         '''
         Configure hysteresis for range Trigger.
@@ -132,8 +132,8 @@ class Positioner:
             None
         '''
         ANC.configureRngTriggerEps(self.device, axisNo, epsilon)
-        
-        
+
+
     def configureRngTriggerPol(self, axisNo, polarity):
         '''
         Configure lower position for range Trigger.
@@ -145,8 +145,8 @@ class Positioner:
             None
         '''
         ANC.configureRngTriggerPol(self.device, axisNo, polarity)
-       
-    
+
+
     def connect(self, devNo=0):
         '''
         Initializes and connects the selected device. This has to be done before any access to control variables or measured data.
@@ -159,8 +159,8 @@ class Positioner:
         device = ctypes.c_void_p()
         ANC.connect(devNo, ctypes.byref(device))
         return device
-        
-        
+
+
     def disconnect(self):
         '''
         Closes the connection to the device. The device handle becomes invalid.
@@ -171,8 +171,8 @@ class Positioner:
             None
         '''
         ANC.disconnect(self.device)
-       
-    
+        self.device = None
+
     def discover(self, ifaces=3):
         '''
         The function searches for connected ANC350RES devices on USB and LAN and initializes internal data structures per device. Devices that are in use by another application or PC are not found. The function must be called before connecting to a device and must not be called as long as any devices are connected.
@@ -187,8 +187,8 @@ class Positioner:
         devCount = ctypes.c_int()
         ANC.discover(ifaces, ctypes.byref(devCount))
         return devCount.value
-    
-    
+
+
     def getActuatorName(self, axisNo):
         '''
         Get the name of the currently selected actuator
@@ -201,8 +201,8 @@ class Positioner:
         name = ctypes.create_string_buffer(20)
         ANC.getActuatorName(self.device, axisNo, ctypes.byref(name))
         return name.value.decode('utf-8')
-        
-        
+
+
     def getActuatorType(self, axisNo):
         '''
         Get the type of the currently selected actuator
@@ -215,12 +215,12 @@ class Positioner:
         type_ = ctypes.c_int()
         ANC.getActuatorType(self.device, axisNo, ctypes.byref(type_))
         return type_.value
-       
-        
+
+
     def getAmplitude(self, axisNo):
         '''
         Reads back the amplitude parameter of an axis.
-        
+
         Parameters
             axisNo	Axis number (0 ... 2)
         Returns
@@ -229,8 +229,8 @@ class Positioner:
         amplitude = ctypes.c_double()
         ANC.getAmplitude(self.device, axisNo, ctypes.byref(amplitude))
         return amplitude.value
-    
-    
+
+
     def getAxisStatus(self, axisNo):
         '''
         Reads status information about an axis of the device.
@@ -256,8 +256,8 @@ class Positioner:
 
         ANC.getAxisStatus(self.device, axisNo, ctypes.byref(connected), ctypes.byref(enabled), ctypes.byref(moving), ctypes.byref(target), ctypes.byref(eotFwd), ctypes.byref(eotBwd), ctypes.byref(error))
         return connected.value, enabled.value, moving.value, target.value, eotFwd.value, eotBwd.value, error.value
-    
-    
+
+
     def getDeviceConfig(self):
         '''
         Reads static device configuration data
@@ -272,15 +272,15 @@ class Positioner:
         '''
         features = ctypes.c_int()
         ANC.getDeviceConfig(self.device, features)
-        
+
         featureSync = 0x01&features.value
         featureLockin = (0x02&features.value)/2
         featureDuty = (0x04&features.value)/4
         featureApp = (0x08&features.value)/8
-        
+
         return featureSync, featureLockin, featureDuty, featureApp
 
-    
+
     def getDeviceInfo(self, devNo=0):
         '''
         Returns available information about a device. The function can not be called before ANC_discover but the devices don't have to be connected . All Pointers to output parameters may be zero to ignore the respective value.
@@ -296,14 +296,14 @@ class Positioner:
         '''
         devType = ctypes.c_int()
         id_ = ctypes.c_int()
-        serialNo = ctypes.create_string_buffer(16) 
-        address = ctypes.create_string_buffer(16) 
+        serialNo = ctypes.create_string_buffer(16)
+        address = ctypes.create_string_buffer(16)
         connected = ctypes.c_int()
 
         ANC.getDeviceInfo(devNo, ctypes.byref(devType), ctypes.byref(id_), ctypes.byref(serialNo), ctypes.byref(address), ctypes.byref(connected))
         return devType.value, id_.value, serialNo.value.decode('utf-8'), address.value.decode('utf-8'), connected.value
-    
-    
+
+
     def getFirmwareVersion(self):
         '''
         Retrieves the version of currently loaded firmware.
@@ -316,8 +316,8 @@ class Positioner:
         version = ctypes.c_int()
         ANC.getFirmwareVersion(self.device, ctypes.byref(version))
         return version.value
-    
-    
+
+
     def getFrequency(self, axisNo):
         '''
         Reads back the frequency parameter of an axis.
@@ -330,8 +330,8 @@ class Positioner:
         frequency = ctypes.c_double()
         ANC.getFrequency(self.device, axisNo, ctypes.byref(frequency))
         return frequency.value
-    
-    
+
+
     def getPosition(self, axisNo):
         '''
         Retrieves the current actuator position. For linear type actuators the position unit is m; for goniometers and rotators it is degree.
@@ -344,8 +344,8 @@ class Positioner:
         position = ctypes.c_double()
         ANC.getPosition(self.device, axisNo, ctypes.byref(position))
         return position.value
-    
-    
+
+
     def measureCapacitance(self, axisNo):
         '''
         Performs a measurement of the capacitance of the piezo motor and returns the result. If no motor is connected, the result will be 0. The function doesn't return before the measurement is complete; this will take a few seconds of time.
@@ -358,7 +358,7 @@ class Positioner:
         cap = ctypes.c_double()
         ANC.measureCapacitance(self.device, axisNo, ctypes.byref(cap))
         return cap.value
-   
+
 
     def saveParams(self):
         '''
@@ -370,8 +370,8 @@ class Positioner:
             None
         '''
         ANC.saveParams(self.device)
-    
-    
+
+
     def selectActuator(self, axisNo, actuator):
         '''
         Selects the actuator to be used for the axis from actuator presets.
@@ -395,8 +395,8 @@ class Positioner:
             None
         '''
         ANC.selectActuator(self.device, axisNo, actuator)
-    
-    
+
+
     def setAmplitude(self, axisNo, amplitude):
         '''
         Sets the amplitude parameter for an axis
@@ -408,7 +408,7 @@ class Positioner:
             None
         '''
         ANC.setAmplitude(self.device, axisNo, ctypes.c_double(amplitude))
-   
+
 
     def setAxisOutput(self, axisNo, enable, autoDisable):
         '''
@@ -422,7 +422,7 @@ class Positioner:
             None
         '''
         ANC.setAxisOutput(self.device, axisNo, enable, autoDisable)
-   
+
 
     def setDcVoltage(self, axisNo, voltage):
         '''
@@ -432,10 +432,10 @@ class Positioner:
             axisNo	Axis number (0 ... 2)
             voltage	DC output voltage [V], internal resolution is 1 mV
         Returns
-            None        
+            None
         '''
         ANC.setDcVoltage(self.device, axisNo, ctypes.c_double(voltage))
- 
+
 
     def setFrequency(self, axisNo, frequency):
         '''
@@ -448,8 +448,8 @@ class Positioner:
             None
         '''
         ANC.setFrequency(self.device, axisNo, ctypes.c_double(frequency))
-        
-   
+
+
     def setTargetPosition(self, axisNo, target):
         '''
         Sets the target position for automatic motion, see ANC_startAutoMove. For linear type actuators the position unit is m, for goniometers and rotators it is degree.
@@ -461,8 +461,8 @@ class Positioner:
             None
         '''
         ANC.setTargetPosition(self.device, axisNo, ctypes.c_double(target))
-        
-        
+
+
     def setTargetRange(self, axisNo, targetRg):
         '''
         Defines the range around the target position where the target is considered to be reached.
@@ -474,8 +474,8 @@ class Positioner:
             None
         '''
         ANC.setTargetRange(self.device, axisNo, ctypes.c_double(targetRg))
-        
-        
+
+
     def startAutoMove(self, axisNo, enable, relative):
         '''
         Switches automatic moving (i.e. following the target position) on or off
@@ -488,8 +488,8 @@ class Positioner:
             None
         '''
         ANC.startAutoMove(self.device, axisNo, enable, relative)
-        
-   
+
+
     def startContinuousMove(self, axisNo, start, backward):
         '''
         Starts or stops continous motion in forward direction. Other kinds of motions are stopped.
@@ -502,7 +502,7 @@ class Positioner:
             None
         '''
         ANC.startContinousMove(self.device, axisNo, start, backward)
-        
+
     def startSingleStep(self, axisNo, backward):
         '''
         Triggers a single step in desired direction.
