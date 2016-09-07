@@ -39,15 +39,15 @@ ANC_NotAvailable = 12 # Function not available for device type
 def checkError(code,func,args):
     if code == ANC_Ok:
         return
-    elif code == ANC_Error:             
+    elif code == ANC_Error:
         raise Exception("Error: unspecific in"+str(func.__name__)+"with parameters:"+str(args))
-    elif code == ANC_Timeout:           
+    elif code == ANC_Timeout:
         raise Exception("Error: comm. timeout in"+str(func.__name__)+"with parameters:"+str(args))
-    elif code == ANC_NotConnected:      
-        raise Exception("Error: not connected") 
-    elif code == ANC_DriverError:       
-        raise Exception("Error: driver error") 
-    elif code == ANC_DeviceLocked:      
+    elif code == ANC_NotConnected:
+        raise Exception("Error: not connected")
+    elif code == ANC_DriverError:
+        raise Exception("Error: driver error")
+    elif code == ANC_DeviceLocked:
         raise Exception("Error: device locked")
     elif code == ANC_NoDevice:
         raise Exception("Error: invalid device number")
@@ -57,7 +57,7 @@ def checkError(code,func,args):
         raise Exception("Error: parameter out of range")
     elif code == ANC_NotAvailable:
         raise Exception("Error: function not available")
-    else:                    
+    else:
         raise Exception("Error: unknown in"+str(func.__name__)+"with parameters:"+str(args))
     return code
 
@@ -65,7 +65,7 @@ def checkError(code,func,args):
 directory_of_this_module_and_dlls = os.path.dirname(os.path.realpath(__file__))
 current_directory = os.getcwd()
 os.chdir(directory_of_this_module_and_dlls)
-anc350v4 = ctypes.windll.LoadLibrary(directory_of_this_module_and_dlls+'\\anc350v4.dll')
+anc350v4 = ctypes.windll.LoadLibrary(os.path.join(directory_of_this_module_and_dlls,'anc350v4.dll'))
 os.chdir(current_directory)
 
 #aliases for the strangely-named functions from the dll
