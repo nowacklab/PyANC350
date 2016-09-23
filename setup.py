@@ -1,4 +1,4 @@
-from distutils.core import setup
+from setuptools import setup
 
 setup(name='PyANC350',
       description='Python Driver for Attocube ANC350',
