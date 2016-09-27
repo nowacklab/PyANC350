@@ -65,9 +65,9 @@ def checkError(code,func,args):
 directory_of_this_module_and_dlls = os.path.dirname(os.path.realpath(__file__))
 current_directory = os.getcwd()
 os.chdir(directory_of_this_module_and_dlls)
+
 try:
     anc350v4 = ctypes.windll.LoadLibrary(os.path.join(directory_of_this_module_and_dlls,'anc350v4.dll'))
-    os.chdir(current_directory)
 
     #aliases for the strangely-named functions from the dll
     discover = getattr(anc350v4,"ANC_discover")
@@ -137,3 +137,5 @@ try:
     saveParams.errcheck = checkError
 except:
     pass
+finally:
+    os.chdir(current_directory)
