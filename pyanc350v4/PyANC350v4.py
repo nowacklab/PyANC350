@@ -41,6 +41,8 @@ class Positioner:
         self.discover()
         self.device = self.connect()
 
+    def __del__(self):
+        self.disconnect()
 
     def configureAQuadBIn(self, axisNo, enable, resolution):
         '''
