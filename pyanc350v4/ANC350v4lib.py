@@ -62,7 +62,7 @@ def checkError(code,func,args):
     return code
 
 try:
-    anc350v4 = ctypes.windll.LoadLibrary('anc350v4.dll')
+    anc350v4 = ctypes.windll.LoadLibrary(os.path.join(os.path.dirname(__file__),'anc350v4.dll'))
 
     #aliases for the strangely-named functions from the dll
     discover = getattr(anc350v4,"ANC_discover")
