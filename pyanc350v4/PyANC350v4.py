@@ -33,7 +33,7 @@
 #              http://nowack.lassp.cornell.edu/
 
 from . import ANC350v4lib as ANC
-import ctypes, math
+import ctypes, math, time
 
 class Positioner:
 
@@ -359,6 +359,7 @@ class Positioner:
         '''
         cap = ctypes.c_double()
         ANC.measureCapacitance(self.device, axisNo, ctypes.byref(cap))
+        time.sleep(0.5) # needs some time to finish
         return cap.value
 
 
