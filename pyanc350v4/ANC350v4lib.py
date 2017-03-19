@@ -18,7 +18,7 @@
 #              http://nowack.lassp.cornell.edu/
 
 
-import ctypes, os, time
+import ctypes, os, time, filecmp, shutil
 
 #
 # List of error types
@@ -63,6 +63,16 @@ def checkError(code,func,args):
 
 # import dll - Need to add dll location to PATH so ctypes can find both dlls
 os.environ['PATH'] = os.path.dirname(__file__) + ';' + os.environ['PATH']
+
+num_bits = ctypes.sizeof(ctypes.c_voidp)*8 # 32 bit or 64 bit Windows
+if num_bits == 32:
+    num_bits = 86 # x86
+## Make sure we are using the right version of the drivers.
+if not filecmp.cmp('anc350v4.dll', 'anc350v4_x%i.dll' %num_bits):
+    shutil.copyfile('anc350v4_x%i.dll' %num_bits, 'anc350v4.dll')
+if not filecmp.cmp('libusb0.dll', 'libusb0_x%i.dll' %num_bits):
+    shutil.copyfile('libusb0_x8%i.dll' %num_bits, 'libusb0.dll')
+
 
 anc350v4 = ctypes.windll.LoadLibrary('anc350v4.dll')
 
