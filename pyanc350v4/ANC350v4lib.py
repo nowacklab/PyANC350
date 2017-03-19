@@ -77,7 +77,7 @@ dll_lib_bits = os.path.join(here, 'libusb0_x%i.dll' %num_bits)
 ## Make sure we are using the right version of the drivers.
 if not filecmp.cmp(dll_anc_bits, dll_anc):
     shutil.copyfile(dll_anc_bits, dll_anc)
-if not filecmp.cmp(dll_lib_Bits, dll_lib):
+if not filecmp.cmp(dll_lib_bits, dll_lib):
     shutil.copyfile(dll_lib_Bits, dll_lib)
 
 
