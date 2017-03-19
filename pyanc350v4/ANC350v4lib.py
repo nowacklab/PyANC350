@@ -78,7 +78,7 @@ dll_lib_bits = os.path.join(here, 'libusb0_x%i.dll' %num_bits)
 if not filecmp.cmp(dll_anc_bits, dll_anc):
     shutil.copyfile(dll_anc_bits, dll_anc)
 if not filecmp.cmp(dll_lib_bits, dll_lib):
-    shutil.copyfile(dll_lib_Bits, dll_lib)
+    shutil.copyfile(dll_lib_bits, dll_lib)
 
 
 anc350v4 = ctypes.windll.LoadLibrary('anc350v4.dll')
