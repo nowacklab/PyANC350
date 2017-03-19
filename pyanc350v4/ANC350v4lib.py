@@ -67,11 +67,18 @@ os.environ['PATH'] = os.path.dirname(__file__) + ';' + os.environ['PATH']
 num_bits = ctypes.sizeof(ctypes.c_voidp)*8 # 32 bit or 64 bit Windows
 if num_bits == 32:
     num_bits = 86 # x86
+
+here = os.path.dirname(__file__)
+dll_anc = os.path.join(here, 'anc350v4.dll')
+dll_anc_bits = os.path.join(here, 'anc350v4_x%i.dll' %num_bits)
+dll_lib = os.path.join(here, 'libusb0.dll')
+dll_lib_bits = os.path.join(here, 'libusb0_x%i.dll' %num_bits)
+
 ## Make sure we are using the right version of the drivers.
-if not filecmp.cmp('anc350v4.dll', 'anc350v4_x%i.dll' %num_bits):
-    shutil.copyfile('anc350v4_x%i.dll' %num_bits, 'anc350v4.dll')
-if not filecmp.cmp('libusb0.dll', 'libusb0_x%i.dll' %num_bits):
-    shutil.copyfile('libusb0_x8%i.dll' %num_bits, 'libusb0.dll')
+if not filecmp.cmp(dll_anc_bits, dll_anc):
+    shutil.copyfile(dll_anc_bits, dll_anc)
+if not filecmp.cmp(dll_lib_Bits, dll_lib):
+    shutil.copyfile(dll_lib_Bits, dll_lib)
 
 
 anc350v4 = ctypes.windll.LoadLibrary('anc350v4.dll')
